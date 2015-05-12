@@ -108,11 +108,12 @@ abstract class BaseCommandExecutor implements CommandExecutor
 
         $shouldOutput = ($this->logExecOutput && ($this->verbose || $status != 0));
 
-        if ($shouldOutput && !empty($this->lastOutput)) {
-            $this->logger->log($this->lastOutput);
+        if ($shouldOutput && $status === 0) {
+            $output = $this->lastOutput ?: $this->lastError;
+            $this->logger->log($output);
         }
 
-        if (!empty($this->lastError)) {
+        if ($status > 0) {
             $this->logger->log("\033[0;31m" . $this->lastError . "\033[0m", LogLevel::ERROR);
         }
 
