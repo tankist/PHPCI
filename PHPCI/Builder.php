@@ -234,11 +234,9 @@ class Builder implements LoggerAwareInterface
         } catch (\Exception $ex) {
             $this->build->setStatus(Build::STATUS_FAILED);
             $this->buildLogger->logFailure(Lang::get('exception') . $ex->getMessage());
-        }finally{
-            // Complete stage plugins are always run
-            $this->pluginExecutor->executePlugins($this->config, 'complete');
         }
 
+        $this->pluginExecutor->executePlugins($this->config, 'complete');
 
         // Update the build in the database, ping any external services, etc.
         $this->build->sendStatusPostback();
